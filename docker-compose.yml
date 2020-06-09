@@ -1,0 +1,34 @@
+version: "3"
+services:
+  backend:
+    build: ./backend
+    container_name: 'super-back'
+    command: sh -c 'python app.py'
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./backend:/backend
+    depends_on:
+      - "mongodb"
+    
+  mongodb:
+    container_name: 'super-mongodb'
+    image: mongo
+    ports:
+      - "27017:27017"
+  
+  frontend:
+    build: ./frontend
+    container_name: 'super-front'
+    command: sh -c 'npm install; npm start'
+    ports:
+      - '3000:3000'
+    
+    volumes:
+      - ./frontend:/frontend
+    
+    depends_on:
+      - "backend"
+    stdin_open: true
+
+    tty: true
